@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hacker news reader</string>
+    <string name="getNews">get news</string>
 </resources>

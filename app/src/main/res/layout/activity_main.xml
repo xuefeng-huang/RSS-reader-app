@@ -9,9 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.github.xuefeng_huang.hackernewsreader.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/xmlTextView"/>
+        android:id="@+id/btnParse"
+        android:text="@string/getNews"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnParse"
+        android:id="@+id/xmlListView"
+        android:layout_marginTop="16dp"></ListView>
 </RelativeLayout>

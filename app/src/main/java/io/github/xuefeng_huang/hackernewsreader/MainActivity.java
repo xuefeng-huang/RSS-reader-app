@@ -1,10 +1,13 @@
 package io.github.xuefeng_huang.hackernewsreader;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,19 +16,30 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView xmlTextView;
+    private Button btnGetNews;
+    private ListView xmlList;
+    private String mFileContents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        xmlTextView = (TextView)findViewById(R.id.xmlTextView);
-        DownloadData downloadData = new DownloadData();
-        downloadData.execute("https://news.ycombinator.com/rss");
+        btnGetNews = (Button)findViewById(R.id.btnParse);
+        xmlList = (ListView)findViewById(R.id.xmlListView);
+
+        btnGetNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadData downloadData = new DownloadData();
+                downloadData.execute("https://news.ycombinator.com/rss");
+            }
+        });
+
+
     }
 
     private class DownloadData extends AsyncTask<String, Void, String> {
-        private String mFileContents;
+
 
         @Override
         protected String doInBackground(String... params) {
@@ -40,7 +54,16 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("DownloadData", "result is: " + s);
-            xmlTextView.setText(mFileContents);
+            Parsexml parseApplication = new Parsexml(s);
+            parseApplication.process();
+
+            ArrayAdapter<News> arrayAdapter = new ArrayAdapter<News>(
+                    MainActivity.this,
+                    R.layout.list_item,
+                    parseApplication.getNews()
+            );
+
+            xmlList.setAdapter(arrayAdapter);
         }
 
         private String downloadXMLFile(String urlPath) {
