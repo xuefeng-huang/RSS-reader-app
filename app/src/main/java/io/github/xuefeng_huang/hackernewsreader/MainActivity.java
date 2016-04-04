@@ -1,10 +1,13 @@
 package io.github.xuefeng_huang.hackernewsreader;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,6 +29,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btnGetNews = (Button)findViewById(R.id.btnParse);
         xmlList = (ListView)findViewById(R.id.xmlListView);
+
+        xmlList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                News record = (News)parent.getItemAtPosition(position);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(record.getLink()));
+                startActivity(intent);
+            }
+        });
 
         btnGetNews.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             Parsexml parseApplication = new Parsexml(s);
             parseApplication.process();
 
-            ArrayAdapter<News> arrayAdapter = new ArrayAdapter<News>(
+            ArrayAdapter<News> arrayAdapter = new ArrayAdapter<>(
                     MainActivity.this,
                     R.layout.list_item,
                     parseApplication.getNews()
